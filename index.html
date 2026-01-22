@@ -1,0 +1,265 @@
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJKEVIN RADIO</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+body{
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:Arial, sans-serif;
+    overflow:hidden;
+}
+
+.video-wrapper{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+}
+
+.background-video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity 1.2s ease;
+}
+
+.background-video.active{opacity:1;}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    z-index:-1;
+}
+
+.player{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.cover{
+    width:260px;
+    height:260px;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 0 30px #1db954;
+}
+
+.cover img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.title{
+    margin:15px 0;
+    font-weight:bold;
+    text-align:center;
+}
+
+.progress{width:70%;}
+.progress input{width:100%; accent-color:#1db954;}
+
+.controls{
+    display:flex;
+    gap:30px;
+    margin-top:15px;
+    align-items:center;
+}
+
+.btn{font-size:1.8rem; cursor:pointer;}
+
+.play{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:#1db954;
+    color:#000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:2rem;
+}
+
+audio{display:none;}
+</style>
+</head>
+
+<body>
+
+<div class="video-wrapper">
+    <video class="background-video active" id="videoA" autoplay loop muted playsinline></video>
+    <video class="background-video" id="videoB" autoplay loop muted playsinline></video>
+</div>
+
+<div class="overlay"></div>
+
+<div class="player">
+
+    <div class="cover">
+        <img id="coverImage">
+    </div>
+
+    <div class="title" id="trackTitle">Cargando...</div>
+
+    <div class="progress">
+        <input type="range" id="progress" min="0" max="100" value="0">
+    </div>
+
+    <div class="controls">
+        <i class="fas fa-backward btn" id="prevBtn"></i>
+        <div class="play" id="playBtn">
+            <i class="fas fa-play" id="playIcon"></i>
+        </div>
+        <i class="fas fa-forward btn" id="nextBtn"></i>
+    </div>
+
+</div>
+
+<audio id="audio"></audio>
+
+<!-- PLAYLIST HTML -->
+<div id="playlist" style="display:none;">
+
+    <div class="track" data-audio="https://github.com/MorelDa/viralpy/raw/refs/heads/main/Amor%20Sincero%20-%20Grupo%20Contra-Tiempo%20(En%20Vivo).mp3" data-cover="https://i.postimg.cc/MX2fQbXv/u-ZKo-Osj-BPl0-1280x720.jpg" data-video="https://github.com/MorelDa/viralpy/raw/refs/heads/main/lv_0_20260122151858.mp4"></div>
+
+    <div class="track" data-audio="https://github.com/MorelDa/viralpy/raw/refs/heads/main/CEREJINHA%20-%20Mily%20Britez,%20Jo%C3%A3o%20Pedro%20e%20Fellipe%20(Video%20Oficial).mp3" data-cover="https://i.postimg.cc/Wp82JcYQ/Y84Dt-ZPi-Aw-480x360.jpg" data-video="https://github.com/MorelDa/viralpy/raw/refs/heads/main/0122%20(1)(1).mp4"></div>
+
+    <div class="track" data-audio="https://github.com/MorelDa/viralpy/raw/refs/heads/main/Mily%20Britez%20-%20Todo%20El%20Mundo%20Menos%20A%20Mi%20(Video%20Oficial).mp3" data-cover="https://i.postimg.cc/yNrvgx4f/JAz-Oi5Hwfzs-1280x720.jpg" data-video="https://github.com/MorelDa/viralpy/raw/refs/heads/main/moreno.mp4"></div>
+
+    <div class="track" data-audio="https://github.com/MorelDa/viralpy/raw/refs/heads/main/Marilina%20-%20Tattoo%20(Video%20Official).mp3" data-cover="https://img.youtube.com/vi/T9kK1EdRXLQ/maxresdefault.jpg" data-video="https://github.com/MorelDa/viralpy/raw/refs/heads/main/0122%20(2).mp4"></div>
+
+    <div class="track" data-audio="https://github.com/MorelDa/viralpy/raw/refs/heads/main/KchaKumbia%20Ft.%20Banda%20Capiibary%20-%20Bonita.mp3" data-cover="https://img.youtube.com/vi/UkY1hfNUkmQ/maxresdefault.jpg" data-video="https://github.com/MorelDa/viralpy/raw/refs/heads/main/banda%20capiibary%20canva.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_6.mp3" data-cover="URL_COVER_6.jpg" data-video="URL_VIDEO_6.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_7.mp3" data-cover="URL_COVER_7.jpg" data-video="URL_VIDEO_7.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_8.mp3" data-cover="URL_COVER_8.jpg" data-video="URL_VIDEO_8.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_9.mp3" data-cover="URL_COVER_9.jpg" data-video="URL_VIDEO_9.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_10.mp3" data-cover="URL_COVER_10.jpg" data-video="URL_VIDEO_10.mp4"></div>
+
+    <div class="track" data-audio="URL_AUDIO_11.mp3" data-cover="URL_COVER_11.jpg" data-video="URL_VIDEO_11.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_12.mp3" data-cover="URL_COVER_12.jpg" data-video="URL_VIDEO_12.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_13.mp3" data-cover="URL_COVER_13.jpg" data-video="URL_VIDEO_13.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_14.mp3" data-cover="URL_COVER_14.jpg" data-video="URL_VIDEO_14.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_15.mp3" data-cover="URL_COVER_15.jpg" data-video="URL_VIDEO_15.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_16.mp3" data-cover="URL_COVER_16.jpg" data-video="URL_VIDEO_16.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_17.mp3" data-cover="URL_COVER_17.jpg" data-video="URL_VIDEO_17.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_18.mp3" data-cover="URL_COVER_18.jpg" data-video="URL_VIDEO_18.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_19.mp3" data-cover="URL_COVER_19.jpg" data-video="URL_VIDEO_19.mp4"></div>
+    <div class="track" data-audio="URL_AUDIO_20.mp3" data-cover="URL_COVER_20.jpg" data-video="URL_VIDEO_20.mp4"></div>
+
+</div>
+
+<script>
+const audio = document.getElementById("audio");
+const coverImage = document.getElementById("coverImage");
+const trackTitle = document.getElementById("trackTitle");
+const playBtn = document.getElementById("playBtn");
+const playIcon = document.getElementById("playIcon");
+const progress = document.getElementById("progress");
+const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.getElementById("prevBtn");
+
+const videoA = document.getElementById("videoA");
+const videoB = document.getElementById("videoB");
+
+let activeVideo = videoA;
+let inactiveVideo = videoB;
+let playing = false;
+
+const tracks = [...document.querySelectorAll(".track")];
+
+/* 🔧 SOLO CAMBIO: ya no empieza aleatorio */
+let index = 0;
+
+/* 🔥 OBTENER TÍTULO DESDE LA URL */
+function getTitleFromURL(url){
+    let file = decodeURIComponent(url.split("/").pop());
+    file = file.replace(".mp3", "");
+    if(file.includes(" - ")){
+        const parts = file.split(" - ");
+        return `${parts[0]} · ${parts.slice(1).join(" - ")}`;
+    }
+    return file;
+}
+
+function changeVideo(src){
+    inactiveVideo.src = src;
+    inactiveVideo.load();
+    inactiveVideo.play();
+    inactiveVideo.classList.add("active");
+    activeVideo.classList.remove("active");
+    [activeVideo, inactiveVideo] = [inactiveVideo, activeVideo];
+}
+
+function loadTrack(i){
+    const t = tracks[i].dataset;
+    audio.src = t.audio;
+    coverImage.src = t.cover;
+    trackTitle.textContent = `${i+1}/${tracks.length} — ${getTitleFromURL(t.audio)}`;
+    changeVideo(t.video);
+}
+
+playBtn.onclick = ()=>{
+    if(!playing){
+        audio.play();
+        playIcon.className="fas fa-pause";
+    }else{
+        audio.pause();
+        playIcon.className="fas fa-play";
+    }
+    playing=!playing;
+};
+
+/* 🔧 SOLO CAMBIO: siguiente en orden */
+function next(){
+    index++;
+    if(index >= tracks.length){
+        index = 0;
+    }
+    loadTrack(index);
+    audio.play();
+    playIcon.className="fas fa-pause";
+    playing=true;
+}
+
+nextBtn.onclick = next;
+
+prevBtn.onclick = ()=>{
+    index = (index-1+tracks.length)%tracks.length;
+    loadTrack(index);
+    audio.play();
+    playIcon.className="fas fa-pause";
+    playing=true;
+};
+
+/* 🔧 SOLO CAMBIO: al terminar, sigue la siguiente */
+audio.onended = next;
+
+audio.ontimeupdate = ()=>{
+    if(audio.duration){
+        progress.value = (audio.currentTime/audio.duration)*100;
+    }
+};
+
+progress.oninput = ()=>{
+    if(audio.duration){
+        audio.currentTime = (progress.value/100)*audio.duration;
+    }
+};
+
+loadTrack(index);
+</script>
+
+</body>
+</html>
